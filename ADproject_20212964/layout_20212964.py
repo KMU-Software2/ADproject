@@ -1,40 +1,40 @@
-import pickle
+import random
 import sys
-import copy
-from PyQt5.QtWidgets import (QWidget, QPushButton, QHBoxLayout, QVBoxLayout, QApplication, QLabel, QComboBox, QTextEdit, QLineEdit)
+from PyQt5.QtWidgets import (QWidget, QToolButton, QPushButton,
+    QHBoxLayout,  QGridLayout, QVBoxLayout, QApplication, QLabel,QSizePolicy,
+    QComboBox, QTextEdit, QLineEdit)
+from PyQt5.QtCore import pyqtSignal
 
-class ADproject(QWidget):
+class startWindow(QWidget):
+    switchWindow = pyqtSignal()
+
     def __init__(self):
         super().__init__()
         self.initUI()
 
     def initUI(self):
-        # 시작 & 재시도 버튼
+        # 시작 버튼
         self.startButton = QPushButton('START')
-        self.againButton = QPushButton('TRY AGAIN')
+        self.startButton.clicked.connect(self.startGame)
 
         hbox_1 = QHBoxLayout()
         hbox_1.addWidget(self.startButton)
-        hbox_1.addWidget(self.againButton)
 
         # size 선택
         self.size = QLabel('size: ')
-        self.sizeCombo = QComboBox()
-        self.sizeCombo.addItems(['  3  ', '  4  ', '  5  '])
+        self.sizeEdit = QLineEdit()
 
         hbox_2 = QHBoxLayout()
         hbox_2.addStretch(1)
         hbox_2.addWidget(self.size)
-        hbox_2.addWidget(self.sizeCombo)
+        hbox_2.addWidget(self.sizeEdit)
 
-        # 버튼 생성 위치
-        """
-        for i in range(
-        """
-        self.playButton = QTextEdit()
+        # 게임 소개
+        self.gameIntro = QTextEdit()
+        self.gameIntro.setReadOnly(True)
 
         hbox_3 = QHBoxLayout()
-        hbox_3.addWidget(self.playButton)
+        hbox_3.addWidget(self.gameIntro)
 
         # 결과 출력 창
         self.result = QLabel('Result:')
@@ -53,12 +53,85 @@ class ADproject(QWidget):
         vbox.addLayout(hbox_4)
 
         self.setLayout(vbox)
-        self.setGeometry(300, 300, 500, 250)
         self.setWindowTitle('ADproject')
         self.show()
 
+    def gameSize(self):
+        return self.sizeEdit.text()
+
+    def startGame(self):
+        self.switchWindow.emit()
+
+class mainWinodw(QWidget):
+    def __init__(self):
+        QWidget.__init__(self)
+        self.initUI()
+
+    def getSize(self):
+        self.start = startWindow()
+        self.size = self.start.gameSize()
+        return self.size
+
+    def getNumOfButton(self):
+        self.numOfButton = int(self.getSize()) ** 2
+        return self.numOfButton
+
+    def initUI(self):
+        size = self.getSize()
+        numOfButton = self.getNumOfButton()
+        ranList = self.rand()
+
+        r = 0
+        c = 0
+        layout = QGridLayout()
+
+        for i in range(numOfButton):
+            self.button = QPushButton(str(ranList[i]))
+            self.button.clicked.connect(lambda: self.buttonClicked(25))
+            layout.addWidget(self.button, r, c)
+            c += 1
+            if c == size:
+                c = 0
+                r += 1
+        self.setLayout(layout)
+
+    def rand(self):
+        self.start = startWindow()
+        size = self.start.gameSize()
+        numOfButton = size ** 2
+        myList = [i for i in range(1, numOfButton + 1)]
+        random.shuffle(myList)
+        return myList
+
+    def buttonClicked(self, number):
+        numOfTarget = int(startWindow.sizeCombo.currentText()) ** 2
+        button = self.sender()
+        key = int(button.text())
+        if key == numOfTarget:
+            self.button.setDisabled(True)
+            numOfTarget -= 1
+
+
+class Controller:
+    def __init__(self):
+        pass
+
+    def startPage(self):
+        self.startWindow = startWindow()
+        self.startWindow.switchWindow.connect(self.mainPage)
+        self.startWindow.show()
+
+    def mainPage(self):
+        self.mainWindow = mainWinodw()
+        self.startWindow.close()
+        self.mainWindow.show()
+
+def main():
+    app = QApplication(sys.argv)
+    controller = Controller()
+    controller.startPage()
+    sys.exit(app.exec_())
+
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = ADproject()
-    sys.exit(app.exec_())
+    main()
