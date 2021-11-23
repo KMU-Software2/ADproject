@@ -22,12 +22,13 @@ class startWindow(QWidget):
 
         # size 선택
         self.size = QLabel('size: ')
-        self.sizeEdit = QLineEdit()
+        self.sizeCombo = QComboBox()
+        self.sizeCombo.addItems(['4', '5', '6'])
 
         hbox_2 = QHBoxLayout()
         hbox_2.addStretch(1)
         hbox_2.addWidget(self.size)
-        hbox_2.addWidget(self.sizeEdit)
+        hbox_2.addWidget(self.sizeCombo)
 
         # 게임 소개
         self.gameIntro = QTextEdit()
@@ -53,11 +54,10 @@ class startWindow(QWidget):
         vbox.addLayout(hbox_4)
 
         self.setLayout(vbox)
-        self.setWindowTitle('ADproject')
-        self.show()
+        self.setWindowTitle('ReadyToPlay')
 
     def gameSize(self):
-        return self.sizeEdit.text()
+        return self.sizeCombo.currentText()
 
     def startGame(self):
         self.switchWindow.emit()
@@ -77,7 +77,7 @@ class mainWinodw(QWidget):
         return self.numOfButton
 
     def initUI(self):
-        size = self.getSize()
+        size = int(self.getSize())
         numOfButton = self.getNumOfButton()
         ranList = self.rand()
 
@@ -94,17 +94,18 @@ class mainWinodw(QWidget):
                 c = 0
                 r += 1
         self.setLayout(layout)
+        self.setWindowTitle('MainPage')
 
     def rand(self):
         self.start = startWindow()
-        size = self.start.gameSize()
+        size = int(self.start.gameSize())
         numOfButton = size ** 2
         myList = [i for i in range(1, numOfButton + 1)]
         random.shuffle(myList)
         return myList
 
     def buttonClicked(self, number):
-        numOfTarget = int(startWindow.sizeCombo.currentText()) ** 2
+        numOfTarget = self.getNumOfButton()
         button = self.sender()
         key = int(button.text())
         if key == numOfTarget:
