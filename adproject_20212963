@@ -1,0 +1,150 @@
+import sys
+import random
+from PyQt5 import QtCore, QtWidgets
+from PyQt5.QtWidgets import QComboBox, QWidget
+from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtWidgets import QLineEdit, QToolButton
+from PyQt5.QtWidgets import QSizePolicy
+from PyQt5.QtWidgets import QLayout, QGridLayout
+from PyQt5.QtWidgets import QComboBox, QTextEdit
+
+
+class Maingame(QWidget):
+
+    switch_window = QtCore.pyqtSignal()
+
+    def __init__(self):
+        QWidget.__init__(self)
+        self.setWindowTitle('Main Window')
+
+        layout = QtWidgets.QGridLayout()
+
+        rand_list = self.rand()
+
+        r = 0
+        c = 0
+
+        for i in range(25):
+            self.button = QtWidgets.QPushButton(str(rand_list[i]))
+            self.button.clicked.connect(lambda: self.buttonClicked(25))
+            layout.addWidget(self.button, r, c)
+            c += 1
+            if c >= 5:
+                c = 0;
+                r += 1
+
+        self.button = QtWidgets.QPushButton('Switch Window')
+        self.button.clicked.connect(self.switch, 5, 1)
+        layout.addWidget(self.button)
+
+        self.setLayout(layout)
+
+    def switch(self):
+        self.switch_window.emit()
+
+    def rand(self):
+        myList = [i for i in range(1, 26)]
+        random.shuffle(myList)
+        return myList
+
+    def buttonClicked(self, number):
+        button = self.sender()
+        key = button.text()
+        num = 25
+        if key == num:
+            self.button.setDisabled(True)
+            num -= 1
+
+
+
+
+
+
+
+class WindowTwo(QWidget):
+
+    def __init__(self):
+        QWidget.__init__(self)
+        self.setWindowTitle('Window Two')
+
+        layout = QtWidgets.QGridLayout()
+
+
+        self.button = QtWidgets.QPushButton('Close')
+        self.button.clicked.connect(self.close)
+
+        layout.addWidget(self.button)
+
+        self.setLayout(layout)
+
+
+class Login(QWidget):
+
+    switch_window = QtCore.pyqtSignal()
+
+    def __init__(self):
+        QtWidgets.QWidget.__init__(self)
+        self.setWindowTitle('순발력테스트')
+
+        Loginlayout = QtWidgets.QGridLayout()
+
+        self.title = QLineEdit()
+        self.title.setReadOnly(True)
+        self.title.setText("순발력 테스트")
+        self.title.setAlignment(QtCore.Qt.AlignCenter)
+
+        self.cb = QComboBox(self)
+        self.cb.addItem('3*3')
+        self.cb.addItem('4*4')
+        self.cb.addItem('5*5')
+
+        self.button = QtWidgets.QPushButton('시작')
+        self.button.clicked.connect(self.login)
+
+        Loginlayout.addWidget(self.title)
+        Loginlayout.addWidget(self.button)
+        Loginlayout.addWidget(self.cb)
+
+
+        self.setLayout(Loginlayout)
+
+    def login(self):
+        self.switch_window.emit()
+
+    def combobox_select(self):
+        self.combo_label.setText(self.combo.currentText())
+        print(self.combo.currentText())
+        print(self.combo.currentIndex()) #key 입력을 위한 콤보박스
+
+
+class Controller:
+
+    def __init__(self):
+        pass
+
+    def show_login(self):
+        self.login = Login()
+        self.login.switch_window.connect(self.show_main)
+        self.login.show()
+
+    def show_main(self):
+        self.window = Maingame()
+        self.window.switch_window.connect(self.show_window_two)
+        self.login.close()
+        self.window.show()
+
+    def show_window_two(self):
+        self.window_two = WindowTwo()
+        self.window.close()
+        self.window_two.show()
+
+
+def main():
+    app = QtWidgets.QApplication(sys.argv)
+    controller = Controller()
+    controller.show_login()
+    sys.exit(app.exec_())
+
+
+if __name__ == '__main__':
+    main()
