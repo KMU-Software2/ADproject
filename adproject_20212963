@@ -5,6 +5,21 @@ from PyQt5.QtWidgets import (QWidget, QToolButton, QPushButton,
     QComboBox, QTextEdit, QLineEdit)
 from PyQt5.QtCore import pyqtSignal
 
+class Button(QToolButton):
+
+    def __init__(self, text, callback):
+        super().__init__()
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        self.setText(text)
+        self.clicked.connect(callback)
+
+    def sizeHint(self):
+        size = super(Button, self).sizeHint()
+        size.setHeight(size.height() + 20)
+        size.setWidth(max(size.width(), size.height()))
+        return size
+
+
 class startWindow(QWidget):
     switchWindow = pyqtSignal(str)
 
@@ -76,14 +91,21 @@ class mainWinodw(QWidget):
         c = 0
         layout = QGridLayout()
 
+        #self.button = [x for x in range(0, int(size)**2)]
         for i in range(numOfButton):
-            self.button = QPushButton(str(ranList[i]))
-            self.button.clicked.connect(lambda: self.buttonClicked(25))
+            self.button = Button(str(ranList[i]), self.buttonClicked)
+            #self.button.clicked.connect(lambda: self.buttonClicked)
             layout.addWidget(self.button, r, c)
             c += 1
             if c == int(size):
                 c = 0
                 r += 1
+
+        self.line_edit = QLineEdit()
+        self.line_edit.setText(str(numOfButton))
+        self.line_edit.setReadOnly(True)
+        layout.addWidget(self.line_edit, 7, 1)
+
         self.setLayout(layout)
         self.setWindowTitle('MainPage')
 
@@ -93,13 +115,16 @@ class mainWinodw(QWidget):
         random.shuffle(myList)
         return myList
 
-    def buttonClicked(self, size):
-        numOfTarget = self.getNumOfButton(size)
+    def buttonClicked(self):
         button = self.sender()
-        key = int(button.text())
-        if key == numOfTarget:
-            self.button.setDisabled(True)
-            numOfTarget -= 1
+        key = button.text()
+        number = self.line_edit.text()
+        if key == number:
+            button.setDisabled(True)
+            self.line_edit.setText(str(int(number)-1))
+        if key == '1' and number == '1':
+            self.close()
+
 
 
 class Controller:
