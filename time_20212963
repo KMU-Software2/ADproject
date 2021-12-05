@@ -1,0 +1,23 @@
+import time
+
+class Time():
+    def __init__(self):
+        self.startTime = 0
+        self.stopTime = 0
+        self.result = ''
+
+    def startTimenow(self):
+        self.startTime = time.time()
+
+    def stopTimenow(self):
+        self.stopTime = time.time()
+        ts = self.stopTime - self.startTime
+        self.result = str(ts)
+
+
+if __name__ == '__main__':
+    T = Time()
+    T.startTimenow()
+    time.sleep(5)
+    T.stopTimenow()
+    print(T.result)
