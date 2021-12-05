@@ -3,7 +3,8 @@ import sys
 from PyQt5.QtWidgets import (QWidget, QToolButton, QPushButton,
     QHBoxLayout,  QGridLayout, QVBoxLayout, QApplication, QLabel,QSizePolicy,
     QComboBox, QTextEdit, QLineEdit)
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSignal, Qt
+from time_20212964 import Time
 
 class Button(QToolButton):
 
@@ -38,7 +39,7 @@ class startWindow(QWidget):
         # size 선택
         self.size = QLabel('size: ')
         self.sizeCombo = QComboBox()
-        self.sizeCombo.addItems(['4', '5', '6'])
+        self.sizeCombo.addItems(['2', '4', '5', '6'])
 
         hbox_2 = QHBoxLayout()
         hbox_2.addStretch(1)
@@ -74,6 +75,7 @@ class startWindow(QWidget):
     def startGame(self):
         self.switchWindow.emit(self.sizeCombo.currentText())
 
+
 class mainWinodw(QWidget):
     def __init__(self, size):
         QWidget.__init__(self)
@@ -89,25 +91,47 @@ class mainWinodw(QWidget):
 
         r = 0
         c = 0
-        layout = QGridLayout()
+        grid = QGridLayout()
 
-        #self.button = [x for x in range(0, int(size)**2)]
         for i in range(numOfButton):
             self.button = Button(str(ranList[i]), self.buttonClicked)
-            #self.button.clicked.connect(lambda: self.buttonClicked)
-            layout.addWidget(self.button, r, c)
+            grid.addWidget(self.button, r, c)
             c += 1
             if c == int(size):
                 c = 0
                 r += 1
 
+        hbox_1 = QHBoxLayout()
+        self.targetLabel = QLabel('Target Number:')
         self.line_edit = QLineEdit()
         self.line_edit.setText(str(numOfButton))
         self.line_edit.setReadOnly(True)
-        layout.addWidget(self.line_edit, 7, 1)
+        self.line_edit.setAlignment(Qt.AlignCenter)
+        hbox_1.addWidget(self.targetLabel)
+        hbox_1.addStretch(1)
+        hbox_1.addWidget(self.line_edit)
 
-        self.setLayout(layout)
-        self.setWindowTitle('MainPage')
+        hbox_2 = QHBoxLayout()
+        self.reButton = QPushButton('Restart')
+        hbox_2.addWidget(self.reButton)
+
+        hbox_3 = QHBoxLayout()
+        self.resultLabel = QLabel('Result:')
+        self.resultLine = QLineEdit()
+        self.resultLine.setText('Plese click Target Number!')
+        self.resultLine.setReadOnly(True)
+        self.resultLine.setAlignment(Qt.AlignCenter)
+        hbox_3.addWidget(self.resultLabel)
+        hbox_3.addWidget(self.resultLine)
+
+        vbox = QVBoxLayout()
+        vbox.addLayout(hbox_1)
+        vbox.addLayout(grid)
+        vbox.addLayout(hbox_2)
+        vbox.addLayout(hbox_3)
+
+        self.setLayout(vbox)
+        self.setWindowTitle('PlayGame')
 
     def rand(self, size):
         numOfButton = int(size) ** 2
@@ -115,16 +139,20 @@ class mainWinodw(QWidget):
         random.shuffle(myList)
         return myList
 
-    def buttonClicked(self):
+    def buttonClicked(self, size):
         button = self.sender()
         key = button.text()
         number = self.line_edit.text()
+        T = Time()
+        if key == str(size ** 2):
+            T.startTimenow()
         if key == number:
             button.setDisabled(True)
             self.line_edit.setText(str(int(number)-1))
         if key == '1' and number == '1':
+            T.stopTimenow()
+            self.resultLine.setText(T.result)
             self.close()
-
 
 
 class Controller:
