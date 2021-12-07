@@ -82,6 +82,8 @@ class mainWinodw(QWidget):
     def __init__(self, size):
         QWidget.__init__(self)
         self.initUI(size)
+        self.startTime = 0
+        self.stopTime = 0
 
     def getNumOfButton(self, size):
         self.numOfButton = int(size) ** 2
@@ -141,18 +143,21 @@ class mainWinodw(QWidget):
         random.shuffle(myList)
         return myList
 
-    def buttonClicked(self, size):
+    def buttonClicked(self):
         button = self.sender()
         key = button.text()
         number = self.line_edit.text()
         BT = StartTime()
         AT = StopTime()
         if key == number:
-            if key == (int(size) ** 2):
+            if key == str(self.numOfButton):
                 BT.startTimenow()
+                self.startTime = BT.startTime
             elif key == '1':
                 AT.stopTimenow()
-                self.resultLine.setText(str(AT.stopTime - BT.startTime))
+                self.stopTime = AT.stopTime
+                timeSpent = str(round(self.stopTime - self.startTime, 3))
+                self.resultLine.setText(timeSpent + ' sec')
             button.setDisabled(True)
             self.line_edit.setText(str(int(number)-1))
             #self.close()
