@@ -4,7 +4,9 @@ from PyQt5.QtWidgets import (QWidget, QToolButton, QPushButton,
     QHBoxLayout,  QGridLayout, QVBoxLayout, QApplication, QLabel,QSizePolicy,
     QComboBox, QTextEdit, QLineEdit)
 from PyQt5.QtCore import pyqtSignal, Qt
-from time_20212964 import Time
+from startTime import StartTime
+from stopTime import StopTime
+
 
 class Button(QToolButton):
 
@@ -77,9 +79,13 @@ class startWindow(QWidget):
 
 
 class mainWinodw(QWidget):
+    switchWindow = pyqtSignal()
+
     def __init__(self, size):
         QWidget.__init__(self)
         self.initUI(size)
+        self.startTime = 0
+        self.stopTime = 0
 
     def getNumOfButton(self, size):
         self.numOfButton = int(size) ** 2
@@ -113,6 +119,7 @@ class mainWinodw(QWidget):
 
         hbox_2 = QHBoxLayout()
         self.reButton = QPushButton('Restart')
+        self.reButton.clicked.connect(self.returnHome)
         hbox_2.addWidget(self.reButton)
 
         hbox_3 = QHBoxLayout()
@@ -139,20 +146,29 @@ class mainWinodw(QWidget):
         random.shuffle(myList)
         return myList
 
-    def buttonClicked(self, size):
+    def buttonClicked(self):
         button = self.sender()
         key = button.text()
         number = self.line_edit.text()
-        T = Time()
-        if key == str(size ** 2):
-            T.startTimenow()
+        BT = StartTime()
+        AT = StopTime()
         if key == number:
+            if key == str(self.numOfButton):
+                BT.startTimenow()
+                self.startTime = BT.startTime
+            elif key == '1':
+                AT.stopTimenow()
+                self.stopTime = AT.stopTime
+                timeSpent = str(round(self.stopTime - self.startTime, 3))
+                self.resultLine.setText(timeSpent + ' sec')
             button.setDisabled(True)
             self.line_edit.setText(str(int(number)-1))
-        if key == '1' and number == '1':
-            T.stopTimenow()
-            self.resultLine.setText(T.result)
-            self.close()
+
+
+    def returnHome(self):
+        self.switchWindow.emit()
+        self.close()
+
 
 
 class Controller:
@@ -166,6 +182,7 @@ class Controller:
 
     def mainPage(self, size):
         self.mainWindow = mainWinodw(size)
+        self.mainWindow.switchWindow.connect(self.startPage)
         self.startWindow.close()
         self.mainWindow.show()
 
