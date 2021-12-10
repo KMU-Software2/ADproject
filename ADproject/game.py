@@ -71,6 +71,8 @@ class startWindow(QWidget):
 
 
 class mainWinodw(QWidget):
+    switchWindow = pyqtSignal()
+
     def __init__(self, size):
         QWidget.__init__(self)
         self.initUI(size)
@@ -113,7 +115,11 @@ class mainWinodw(QWidget):
 
         hbox_3 = QHBoxLayout()
         self.reButton = QPushButton('Restart')
+        self.reButton.clicked.connect(self.returnHome)
+        self.exitButton = QPushButton('Exit')
+        self.exitButton.clicked.connect(self.buttonClicked)
         hbox_3.addWidget(self.reButton)
+        hbox_3.addWidget(self.exitButton)
 
         vbox = QVBoxLayout()
         vbox.addLayout(hbox_1)
@@ -140,6 +146,12 @@ class mainWinodw(QWidget):
             else:
                 self.line_edit.setText(str(int(number)-1))
             button.setDisabled(True)
+        else:
+            self.close()
+
+    def returnHome(self):
+        self.switchWindow.emit()
+        self.close()
 
 
 class Controller:
@@ -153,6 +165,7 @@ class Controller:
 
     def mainPage(self, size):
         self.mainWindow = mainWinodw(size)
+        self.mainWindow.switchWindow.connect(self.startPage)
         self.startWindow.close()
         self.mainWindow.show()
 
