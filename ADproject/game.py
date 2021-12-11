@@ -107,7 +107,7 @@ class mainWinodw(QWidget):
         hbox_2 = QHBoxLayout()
         self.resultLabel = QLabel('Result:')
         self.resultLine = QLineEdit()
-        self.resultLine.setText('Plese click Target Number!')
+        self.resultLine.setText('Click Target Number!')
         self.resultLine.setReadOnly(True)
         self.resultLine.setAlignment(Qt.AlignCenter)
         hbox_2.addWidget(self.resultLabel)
@@ -138,7 +138,7 @@ class mainWinodw(QWidget):
             if key == str(self.numOfButton):
                 self.startTime = CheckTime()
                 self.line_edit.setText(str(int(number) - 1))
-                self.resultLine.setText('Plese click Target Number!')
+                self.resultLine.setText('Click Target Number!')
             elif key == '1':
                 self.line_edit.setText('SUCCESS!')
                 self.stopTime = CheckTime()
