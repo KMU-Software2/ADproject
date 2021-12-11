@@ -55,15 +55,15 @@ class startWindow(QWidget):
 
         hbox_3 = QHBoxLayout()
         hbox_3.addWidget(self.gameIntro)
-        
-        # 시작 버튼
-        self.exitButton = QPushButton('EXIT')
+
+        # 종료 버튼
+        self.exitButton = QPushButton('Exit')
         self.exitButton.clicked.connect(self.exitGame)
 
         hbox_4 = QHBoxLayout()
         hbox_4.addWidget(self.exitButton)
 
-        #최종 배치
+        # 최종 배치
         vbox = QVBoxLayout()
         vbox.addLayout(hbox_1)
         vbox.addLayout(hbox_2)
@@ -71,12 +71,12 @@ class startWindow(QWidget):
         vbox.addLayout(hbox_4)
 
         self.setLayout(vbox)
-        self.resize(500, 300)
+        self.resize(550, 300)
         self.setWindowTitle('ReadyToPlay')
 
     def startGame(self):
         self.switchWindow.emit(self.sizeCombo.currentText())
-        
+
     def exitGame(self):
         self.close()
 
@@ -84,14 +84,16 @@ class startWindow(QWidget):
 class mainWinodw(QWidget):
     switchWindow = pyqtSignal()
 
-    def __init__(self, size):
+    def __init__(self, selectSize):
         QWidget.__init__(self)
+        size = int(selectSize)
         self.initUI(size)
         self.startTime = CheckTime()
+
         self.stopTime = 0
 
     def initUI(self, size):
-        self.numOfButton = int(size) ** 2
+        self.numOfButton = size ** 2
         ranList = setNumpad(self.numOfButton)
 
         r = 0
@@ -102,10 +104,11 @@ class mainWinodw(QWidget):
             self.button = Button(str(ranList[i]), self.buttonClicked)
             grid.addWidget(self.button, r, c)
             c += 1
-            if c == int(size):
+            if c == size:
                 c = 0
                 r += 1
 
+        # 타겟 넘버
         hbox_1 = QHBoxLayout()
         self.targetLabel = QLabel('Target Number:')
         self.line_edit = QLineEdit()
@@ -115,6 +118,7 @@ class mainWinodw(QWidget):
         hbox_1.addWidget(self.targetLabel)
         hbox_1.addWidget(self.line_edit)
 
+        # 결과 출력
         hbox_2 = QHBoxLayout()
         self.resultLabel = QLabel('Result:')
         self.resultLine = QLineEdit()
@@ -124,6 +128,7 @@ class mainWinodw(QWidget):
         hbox_2.addWidget(self.resultLabel)
         hbox_2.addWidget(self.resultLine)
 
+        # 재시작&종료 버튼
         hbox_3 = QHBoxLayout()
         self.reButton = QPushButton('Restart')
         self.reButton.clicked.connect(self.returnHome)
@@ -132,6 +137,7 @@ class mainWinodw(QWidget):
         hbox_3.addWidget(self.reButton)
         hbox_3.addWidget(self.exitButton)
 
+        # 최종 배치
         vbox = QVBoxLayout()
         vbox.addLayout(hbox_1)
         vbox.addLayout(grid)
@@ -141,21 +147,22 @@ class mainWinodw(QWidget):
         self.setLayout(vbox)
         self.setWindowTitle('PlayGame')
 
+    # 버튼 클릭 시, 기능 구현
     def buttonClicked(self):
         button = self.sender()
         key = button.text()
-        number = self.line_edit.text()
-        if key == number:
+        number = int(self.line_edit.text())
+        if key == str(number):
             self.resultLine.setText('Please click Target Number!')
             if key == str(self.numOfButton):
-                self.line_edit.setText(str(int(number) - 1))
+                self.line_edit.setText(str(number - 1))
             elif key == '1':
                 self.line_edit.setText('SUCCESS!')
                 self.stopTime = CheckTime()
                 timeSpent = str(round(self.stopTime - self.startTime, 3))
                 self.resultLine.setText(timeSpent + ' sec')
             else:
-                self.line_edit.setText(str(int(number)-1))
+                self.line_edit.setText(str(number-1))
             button.setDisabled(True)
         else:
             try:
