@@ -76,7 +76,7 @@ class mainWinodw(QWidget):
     def __init__(self, size):
         QWidget.__init__(self)
         self.initUI(size)
-        self.startTime = 0
+        self.startTime = CheckTime()
         self.stopTime = 0
 
     def initUI(self, size):
@@ -107,7 +107,7 @@ class mainWinodw(QWidget):
         hbox_2 = QHBoxLayout()
         self.resultLabel = QLabel('Result:')
         self.resultLine = QLineEdit()
-        self.resultLine.setText('Click Target Number!')
+        self.resultLine.setText('Please click Target Number!')
         self.resultLine.setReadOnly(True)
         self.resultLine.setAlignment(Qt.AlignCenter)
         hbox_2.addWidget(self.resultLabel)
@@ -135,10 +135,9 @@ class mainWinodw(QWidget):
         key = button.text()
         number = self.line_edit.text()
         if key == number:
+            self.resultLine.setText('Please click Target Number!')
             if key == str(self.numOfButton):
-                self.startTime = CheckTime()
                 self.line_edit.setText(str(int(number) - 1))
-                self.resultLine.setText('Click Target Number!')
             elif key == '1':
                 self.line_edit.setText('SUCCESS!')
                 self.stopTime = CheckTime()
@@ -148,7 +147,7 @@ class mainWinodw(QWidget):
                 self.line_edit.setText(str(int(number)-1))
             button.setDisabled(True)
         elif key != number:
-            self.resultLine.setText("You push the wrong button!")
+            self.resultLine.setText('You push the wrong button!')
         else:
             self.close()
 
