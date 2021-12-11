@@ -49,18 +49,26 @@ class startWindow(QWidget):
 
         # 게임 소개
         self.gameIntro = QTextEdit()
-        self.gameIntro.setText(manual[0])
+        self.gameIntro.setText(manual)
         self.gameIntro.setAlignment(Qt.AlignCenter)
         self.gameIntro.setReadOnly(True)
 
         hbox_3 = QHBoxLayout()
         hbox_3.addWidget(self.gameIntro)
+        
+        # 시작 버튼
+        self.exitButton = QPushButton('EXIT')
+        self.exitButton.clicked.connect(self.exitGame)
+
+        hbox_4 = QHBoxLayout()
+        hbox_4.addWidget(self.exitButton)
 
         #최종 배치
         vbox = QVBoxLayout()
         vbox.addLayout(hbox_1)
         vbox.addLayout(hbox_2)
         vbox.addLayout(hbox_3)
+        vbox.addLayout(hbox_4)
 
         self.setLayout(vbox)
         self.resize(500, 300)
@@ -68,6 +76,9 @@ class startWindow(QWidget):
 
     def startGame(self):
         self.switchWindow.emit(self.sizeCombo.currentText())
+        
+    def exitGame(self):
+        self.close()
 
 
 class mainWinodw(QWidget):
