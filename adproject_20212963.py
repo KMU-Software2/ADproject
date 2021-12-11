@@ -151,18 +151,12 @@ class mainWinodw(QWidget):
         random.shuffle(myList)
         return myList
 
-    def buttonClicked(self):
+     def buttonClicked(self):
         button = self.sender()
         key = button.text()
         number = self.line_edit.text()
-        #BT = StartTime()
-        #AT = StopTime()
         if key == number:
-            if key == str(self.numOfButton):
-                #self.BT.startTimenow()
-                #self.startTime = self.BT.startTime
-                pass
-            elif key == '1':
+            if key == '1':
                 self.AT.stopTimenow()
                 self.stopTime = self.AT.stopTime
                 timeSpent = str(round(self.stopTime - self.startTime, 3))
