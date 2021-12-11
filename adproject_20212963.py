@@ -1,7 +1,7 @@
 import random
 import sys
 from PyQt5.QtWidgets import (QWidget, QToolButton, QPushButton,
-    QHBoxLayout,  QGridLayout, QVBoxLayout, QApplication, QLabel,QSizePolicy,
+    QHBoxLayout,  QGridLayout, QVBoxLayout, QApplication, QLabel, QSizePolicy,
     QComboBox, QTextEdit, QLineEdit)
 from PyQt5.QtCore import pyqtSignal, Qt
 from startTime import StartTime
@@ -51,20 +51,22 @@ class startWindow(QWidget):
         # 게임 소개
         self.gameIntro = QTextEdit()
         self.gameIntro.setReadOnly(True)
+        self.gameIntro.setText("이 게임은 타겟 넘버에 해당하는 버튼을 순서대로 누르는 게임입니다.\n버튼을 역순으로 모두 눌러보세요!\n이 게임으로 순발력이 늘기를 바랍니다.")
+        self.gameIntro.append("기본적으로 콤보박스에 있는 번호 중 4, 5, 6을 선택하면 게임을 즐길 수 있으며, 2는 게임을 이해하지 못한 분을 위하여 준비하였습니다.")
+        self.gameIntro.append("콤보박스에서 선택한 숫자의 제곱만큼 버튼이 생성됩니다.")
+        self.gameIntro.append("즐거운 게임이 되길 바랍니다.")
 
         hbox_3 = QHBoxLayout()
         hbox_3.addWidget(self.gameIntro)
 
-        # 결과 출력 창
-        self.result = QLabel('Result:')
-        self.resultEdit = QLineEdit()
-        self.resultEdit.setReadOnly(True)
+        # 시작 버튼
+        self.exitButton = QPushButton('EXIT')
+        self.exitButton.clicked.connect(self.exitGame)
 
         hbox_4 = QHBoxLayout()
-        hbox_4.addWidget(self.result)
-        hbox_4.addWidget(self.resultEdit)
+        hbox_4.addWidget(self.exitButton)
 
-        #최종 배치
+        # 최종 배치
         vbox = QVBoxLayout()
         vbox.addLayout(hbox_1)
         vbox.addLayout(hbox_2)
@@ -76,6 +78,9 @@ class startWindow(QWidget):
 
     def startGame(self):
         self.switchWindow.emit(self.sizeCombo.currentText())
+
+    def exitGame(self):
+        self.close()
 
 
 class mainWindow(QWidget):
@@ -94,13 +99,13 @@ class mainWindow(QWidget):
 
     #n*n 버튼
     def getNumOfButton(self, size):
-        self.numOfButton = int(size) ** 2
-        return self.numOfButton
+        numOfButton = int(size) ** 2
+        return numOfButton
 
     #UI 만들기
     def initUI(self, size):
         numOfButton = self.getNumOfButton(size)
-        ranList = self.rand(size)
+        ranList = self.rand(numOfButton)
 
         r = 0
         c = 0
@@ -152,8 +157,7 @@ class mainWindow(QWidget):
         self.setWindowTitle('PlayGame')
 
     #랜덤 리스트
-    def rand(self, size):
-        numOfButton = int(size) ** 2
+    def rand(self, numOfButton):
         myList = [i for i in range(1, numOfButton + 1)]
         random.shuffle(myList)
         return myList
