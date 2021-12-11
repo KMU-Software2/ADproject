@@ -134,10 +134,11 @@ class mainWinodw(QWidget):
         button = self.sender()
         key = button.text()
         number = self.line_edit.text()
-        if key == number:
+                if key == number:
             if key == str(self.numOfButton):
                 self.startTime = CheckTime()
                 self.line_edit.setText(str(int(number) - 1))
+                self.resultLine.setText('Plese click Target Number!')
             elif key == '1':
                 self.line_edit.setText('SUCCESS!')
                 self.stopTime = CheckTime()
@@ -146,6 +147,8 @@ class mainWinodw(QWidget):
             else:
                 self.line_edit.setText(str(int(number)-1))
             button.setDisabled(True)
+        elif key != number:
+            self.resultLine.setText("You push the wrong button!")
         else:
             self.close()
 
