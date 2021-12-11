@@ -86,6 +86,9 @@ class mainWinodw(QWidget):
         self.initUI(size)
         self.startTime = 0
         self.stopTime = 0
+        self.BT = StartTime()
+        self.AT = StopTime()
+        self.BT.startTimenow()
 
     def getNumOfButton(self, size):
         self.numOfButton = int(size) ** 2
@@ -150,19 +153,21 @@ class mainWinodw(QWidget):
         button = self.sender()
         key = button.text()
         number = self.line_edit.text()
-        BT = StartTime()
-        AT = StopTime()
+        #BT = StartTime()
+        #AT = StopTime()
         if key == number:
             if key == str(self.numOfButton):
-                BT.startTimenow()
-                self.startTime = BT.startTime
+                #self.BT.startTimenow()
+                self.startTime = self.BT.startTime
             elif key == '1':
-                AT.stopTimenow()
-                self.stopTime = AT.stopTime
+                self.AT.stopTimenow()
+                self.stopTime = self.AT.stopTime
                 timeSpent = str(round(self.stopTime - self.startTime, 3))
                 self.resultLine.setText(timeSpent + ' sec')
             button.setDisabled(True)
             self.line_edit.setText(str(int(number)-1))
+        else:
+            self.resultLine.setText('Wrong!')
 
 
     def returnHome(self):
