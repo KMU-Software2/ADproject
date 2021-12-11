@@ -84,11 +84,13 @@ class mainWinodw(QWidget):
     def __init__(self, size):
         QWidget.__init__(self)
         self.initUI(size)
+        #게임 시간 측정
         self.startTime = 0
         self.stopTime = 0
         self.BT = StartTime()
         self.AT = StopTime()
         self.BT.startTimenow()
+        self.startTime = self.BT.startTime
 
     def getNumOfButton(self, size):
         self.numOfButton = int(size) ** 2
@@ -158,7 +160,8 @@ class mainWinodw(QWidget):
         if key == number:
             if key == str(self.numOfButton):
                 #self.BT.startTimenow()
-                self.startTime = self.BT.startTime
+                #self.startTime = self.BT.startTime
+                pass
             elif key == '1':
                 self.AT.stopTimenow()
                 self.stopTime = self.AT.stopTime
