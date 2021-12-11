@@ -40,7 +40,7 @@ class startWindow(QWidget):
         # size 선택
         self.size = QLabel('size: ')
         self.sizeCombo = QComboBox()
-        self.sizeCombo.addItems(['4', '5', '6', '7', '8'])
+        self.sizeCombo.addItems(['  4  ', '  5  ', '  6  ', '  7  ', '  8  '])
 
         hbox_2 = QHBoxLayout()
         hbox_2.addStretch(1)
@@ -71,7 +71,7 @@ class startWindow(QWidget):
         vbox.addLayout(hbox_4)
 
         self.setLayout(vbox)
-        self.resize(550, 300)
+        self.resize(500, 260)
         self.setWindowTitle('ReadyToPlay')
 
     def startGame(self):
