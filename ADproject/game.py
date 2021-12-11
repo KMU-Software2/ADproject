@@ -134,7 +134,7 @@ class mainWinodw(QWidget):
         button = self.sender()
         key = button.text()
         number = self.line_edit.text()
-                if key == number:
+        if key == number:
             if key == str(self.numOfButton):
                 self.startTime = CheckTime()
                 self.line_edit.setText(str(int(number) - 1))
