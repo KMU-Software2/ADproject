@@ -78,7 +78,7 @@ class startWindow(QWidget):
         self.switchWindow.emit(self.sizeCombo.currentText())
 
 
-class mainWinodw(QWidget):
+class mainWindow(QWidget):
     switchWindow = pyqtSignal()
 
     def __init__(self, size):
@@ -92,10 +92,12 @@ class mainWinodw(QWidget):
         self.BT.startTimenow()
         self.startTime = self.BT.startTime
 
+    #n*n 버튼
     def getNumOfButton(self, size):
         self.numOfButton = int(size) ** 2
         return self.numOfButton
 
+    #UI 만들기
     def initUI(self, size):
         numOfButton = self.getNumOfButton(size)
         ranList = self.rand(size)
@@ -104,6 +106,7 @@ class mainWinodw(QWidget):
         c = 0
         grid = QGridLayout()
 
+        #버튼 만들기
         for i in range(numOfButton):
             self.button = Button(str(ranList[i]), self.buttonClicked)
             grid.addWidget(self.button, r, c)
@@ -112,6 +115,7 @@ class mainWinodw(QWidget):
                 c = 0
                 r += 1
 
+        #타겟 넘버 보여주는 라인
         hbox_1 = QHBoxLayout()
         self.targetLabel = QLabel('Target Number:')
         self.line_edit = QLineEdit()
@@ -122,11 +126,13 @@ class mainWinodw(QWidget):
         hbox_1.addStretch(1)
         hbox_1.addWidget(self.line_edit)
 
+        #재시작 버튼
         hbox_2 = QHBoxLayout()
         self.reButton = QPushButton('Restart')
         self.reButton.clicked.connect(self.returnHome)
         hbox_2.addWidget(self.reButton)
 
+        #결과(시간이 나오는 라인)
         hbox_3 = QHBoxLayout()
         self.resultLabel = QLabel('Result:')
         self.resultLine = QLineEdit()
@@ -145,13 +151,15 @@ class mainWinodw(QWidget):
         self.setLayout(vbox)
         self.setWindowTitle('PlayGame')
 
+    #랜덤 리스트
     def rand(self, size):
         numOfButton = int(size) ** 2
         myList = [i for i in range(1, numOfButton + 1)]
         random.shuffle(myList)
         return myList
 
-     def buttonClicked(self):
+    #버튼을 클릭할 때
+    def buttonClicked(self):
         button = self.sender()
         key = button.text()
         number = self.line_edit.text()
@@ -166,13 +174,13 @@ class mainWinodw(QWidget):
         else:
             self.resultLine.setText('Wrong!')
 
-
+    #재시작
     def returnHome(self):
         self.switchWindow.emit()
         self.close()
 
 
-
+#레이아웃 바꾸는 클래스
 class Controller:
     def __init__(self):
         pass
@@ -183,7 +191,7 @@ class Controller:
         self.startWindow.show()
 
     def mainPage(self, size):
-        self.mainWindow = mainWinodw(size)
+        self.mainWindow = mainWindow(size)
         self.mainWindow.switchWindow.connect(self.startPage)
         self.startWindow.close()
         self.mainWindow.show()
