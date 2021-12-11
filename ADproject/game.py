@@ -146,10 +146,12 @@ class mainWinodw(QWidget):
             else:
                 self.line_edit.setText(str(int(number)-1))
             button.setDisabled(True)
-        elif key != number:
-            self.resultLine.setText('You push the wrong button!')
         else:
-            self.close()
+            try:
+                int(key)
+                self.resultLine.setText("You push the wrong button!")
+            except:
+                self.close()
 
     def returnHome(self):
         self.switchWindow.emit()
