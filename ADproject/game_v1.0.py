@@ -154,9 +154,7 @@ class mainWinodw(QWidget):
         number = int(self.line_edit.text())
         if key == str(number):
             self.resultLine.setText('Please click Target Number!')
-            if key == str(self.numOfButton):
-                self.line_edit.setText(str(number - 1))
-            elif key == '1':
+            if key == '1':
                 self.line_edit.setText('SUCCESS!')
                 self.stopTime = CheckTime()
                 timeSpent = str(round(self.stopTime - self.startTime, 3))
