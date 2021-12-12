@@ -116,7 +116,6 @@ class mainWinodw(QWidget):
         self.targetLabel = QLabel('Target Number:')
         self.line_edit = QLineEdit()
         self.line_edit.setText(str(self.TL.targetList[0]))
-        print(self.TL.targetList)
         self.line_edit.setReadOnly(True)
         self.line_edit.setAlignment(Qt.AlignCenter)
         hbox_1.addWidget(self.targetLabel)
